@@ -1,0 +1,19 @@
+{
+  "type": "panel",
+  "name": "Alert list - Sound",
+  "id": "alertlist-sound",
+
+  "skipDataQuery": true,
+
+  "info": {
+    "description": "Shows list of alerts and their current status, and play sounds.",
+    "author": {
+      "name": "Frédéric Girard",
+      "url": ""
+    },
+    "logos": {
+      "small": "img/icn-singlestat-panel.svg",
+      "large": "img/icn-singlestat-panel.svg"
+    }
+  }
+}
