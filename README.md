@@ -1,3 +1,57 @@
+
+# Notes From Ale
+This is a special version of Grafana with added the plugin made by Fred. 
+If you want to update version of Grafana in the SC and keep this idiotic plugin then do the following:
+
+```bash
+# add the original grafana as remote
+git remote add upstream git@github.com:grafana/grafana.git
+
+# fetch all newest update
+git fetch upstream
+
+# Show tags
+git tag 
+
+# get the commit ID related to the release you want
+# for example
+git show v8.0.1
+
+# once you get the commit ID then merge with it
+# for example
+git merge 8849243d272e57fd3f7a50c0e02f6a4f00bbeb04
+
+# now commit and push
+git commit -a -m "I'm stupid if I write this"
+git push
+
+# Now build the docker container -  this takes ages
+sudo docker build -f Dockerfile -t xenoscopesc/grafana-alert-sound:v_WRITE_HERE_VERSION .
+
+# Now test the docker container
+sudo docker run --network host xenoscopesc/grafana-alert-sound:v_WRITE_HERE_VERSION
+
+# Now login to docker hub with credential of xenoscopesc (password is in service_accounts)
+sudo docker login
+
+# Push the container new tag version to the hub
+sudo docker push xenoscopesc/grafana-alert-sound:v_WRITE_HERE_VERSION
+
+```
+
+## Why this is a bad idea
+
+This plugin is basically meant for alarm aknowledge, however it does not really solve the problem.
+The idea is that you have this thing beeping untill somebody `aknowledge` it and fix the problem.
+This is a bad idea because:
+
+- You can achieve the same effect by configuring on your smartphone, making the smartphone ring at intervalls untill you actually see the SMS. Android can do it, not sure about IPhone.
+- It is annoying to have a beeping sound repeatedly when an alarm is firing (especially in the assembly hall), so this will push the users to deactivate the firing alarms on Grafana, which is an anti-pattern because soon or later you will forget to turn the alarm on again (once the issue is fixed).
+- Alert-Manager silences (which is the right practice to employ) do not shut-down this sound-plugin, so the thing will keep beeping.
+
+
+## Grafana
+
 ![Grafana](docs/logo-horizontal.png)
 
 The open-source platform for monitoring and observability.
