@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/grafana/grafana/pkg/infra/log"
+
 	gokit_log "github.com/go-kit/kit/log"
 	"github.com/go-openapi/strfmt"
 	"github.com/prometheus/alertmanager/api/v2/models"
@@ -19,6 +21,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	apimodels "github.com/grafana/grafana/pkg/services/ngalert/api/tooling/definitions"
+	"github.com/grafana/grafana/pkg/services/ngalert/logging"
 	"github.com/grafana/grafana/pkg/services/ngalert/metrics"
 	"github.com/grafana/grafana/pkg/services/ngalert/store"
 	"github.com/grafana/grafana/pkg/services/sqlstore"
@@ -35,14 +38,16 @@ func setupAMTest(t *testing.T) *Alertmanager {
 		DataPath: dir,
 	}
 
+	m := metrics.NewMetrics(prometheus.NewRegistry())
 	sqlStore := sqlstore.InitTestDB(t)
 	store := &store.DBstore{
 		BaseInterval:           10 * time.Second,
 		DefaultIntervalSeconds: 60,
 		SQLStore:               sqlStore,
+		Logger:                 log.New("alertmanager-test"),
 	}
 
-	am, err := New(cfg, store, metrics.NewMetrics(prometheus.NewRegistry()))
+	am, err := New(cfg, store, m)
 	require.NoError(t, err)
 	return am
 }
@@ -275,7 +280,7 @@ func TestPutAlert(t *testing.T) {
 		t.Run(c.title, func(t *testing.T) {
 			r := prometheus.NewRegistry()
 			am.marker = types.NewMarker(r)
-			am.alerts, err = mem.NewAlerts(context.Background(), am.marker, 15*time.Minute, gokit_log.NewNopLogger())
+			am.alerts, err = mem.NewAlerts(context.Background(), am.marker, 15*time.Minute, gokit_log.NewLogfmtLogger(logging.NewWrapper(am.logger)))
 			require.NoError(t, err)
 
 			alerts := []*types.Alert{}
