@@ -45,7 +45,7 @@ This plugin is basically meant for alarm aknowledge, however it does not really 
 The idea is that you have this thing beeping untill somebody `aknowledge` it and fix the problem.
 This is a bad idea because:
 
-- You can achieve the same effect by configuring on your smartphone, making the smartphone ring at intervalls untill you actually see the SMS. Android can do it, not sure about IPhone.
+- You can achieve the same effect by configuring it your smartphone, making the smartphone ring at intervalls untill you actually see the SMS. Android can do it, not sure about IPhone.
 - It is annoying to have a beeping sound repeatedly when an alarm is firing (especially in the assembly hall), so this will push the users to deactivate the firing alarms on Grafana, which is an anti-pattern because soon or later you will forget to turn the alarm on again (once the issue is fixed).
 - Alert-Manager silences (which is the right practice to employ) do not shut-down this sound-plugin, so the thing will keep beeping.
 
